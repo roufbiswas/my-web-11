@@ -1,84 +1,131 @@
-<!doctype html>
-<html lang="bn">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>পাসওয়ার্ড প্রোটেক্টেড পেজ</title>
-  <style>
-    :root{font-family: 'Noto Sans Bengali', Arial, sans-serif}
-    body{display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f3f4f6}
-    .card{background:#fff;padding:28px;border-radius:12px;box-shadow:0 8px 30px rgba(10,10,10,0.07);width:380px}
-    h1{font-size:20px;margin:0 0 12px}
-    label{display:block;margin-bottom:6px;font-size:13px;color:#333}
-    input[type=password]{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:15px}
-    button{margin-top:12px;width:100%;padding:10px;border-radius:8px;border:0;background:#2563eb;color:#fff;font-weight:600;cursor:pointer}
-    .msg{margin-top:10px;font-size:13px}
-    .hidden{display:none}
-    #protected{padding:18px;border-radius:10px;background:#eef2ff;margin-top:14px}
-    small{color:#666}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Website</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .password-section {
+            margin-bottom: 30px;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
 <body>
-  <div class="card">
-    <h1>এখানে প্রবেশ করতে পাসওয়ার্ড লাগবে</h1>
-    <label for="pw">পাসওয়ার্ড লিখুন</label>
-    <input id="pw" type="password" autocomplete="off" placeholder="Password">
-    <button id="go">প্রবেশ</button>
-    <div class="msg" id="msg"></div>
+    <div class="container">
+        <!-- Password Section -->
+        <div id="passwordSection" class="password-section">
+            <h2>Enter Password</h2>
+            <p><strong>Password: ROUF11</strong></p>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button onclick="checkPassword()">Access Site</button>
+            <div id="passwordError" class="message error">Wrong password!</div>
+        </div>
 
-    <div id="protected" class="hidden" aria-hidden="true">
-      <h2>স্বাগতম — নিরাপদ কনটেন্ট</h2>
-      <p>এখানে আপনি আপনার সিক্রেট কনটেন্ট রাখবেন — ছবি, লিংক, বা অন্য জিনিস।</p>
-      <p><small>এই পাসওয়ার্ড চেকটি ব্রাউজারের দিক থেকে করা হচ্ছে — production-এ ব্যবহার করার আগে সার্ভার-সাইড অথেনটিকেশন ব্যবহার করুন।</small></p>
+        <!-- Message Form (Initially Hidden) -->
+        <div id="messageForm" style="display: none;">
+            <h2>Send Message to roufbiswas33@gmail.com</h2>
+            <form id="emailForm">
+                <input type="text" id="name" name="name" placeholder="Your Name" required>
+                <input type="email" id="email" name="email" placeholder="Your Email" required>
+                <input type="text" id="subject" name="subject" placeholder="Subject" required>
+                <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit">Send Email</button>
+            </form>
+            <div id="successMessage" class="message success">Message sent successfully!</div>
+            <div id="errorMessage" class="message error">Failed to send message!</div>
+        </div>
     </div>
-  </div>
 
-<script>
-// -----------------------------
-// পরিবর্তনযোগ্য সেটিংস
-// storedHash হল SHA-256 হেক্স (lowercase) যা পাসওয়ার্ডের জন্য সেট করা আছে।
-// ডিফল্ট পাসওয়ার্ড: "secret123"
-const storedHash = '46165daa97b98f1734ceaf9de4beae844f52395297335c3edeef854007aef031';
-// -----------------------------
+    <script>
+        // Password check
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'ROUF11') {
+                document.getElementById('passwordSection').style.display = 'none';
+                document.getElementById('messageForm').style.display = 'block';
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        }
 
-const pwInput = document.getElementById('pw');
-const btn = document.getElementById('go');
-const msg = document.getElementById('msg');
-const protectedDiv = document.getElementById('protected');
+        // Email form submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
 
-async function sha256Hex(str){
-  const buf = new TextEncoder().encode(str);
-  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
-  const hashArray = Array.from(new Uint8Array(hashBuf));
-  return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-btn.addEventListener('click', async ()=>{
-  msg.textContent = '';
-  const val = pwInput.value || '';
-  if(!val){ msg.textContent = 'পাসওয়ার্ড খালি রাখা যাবে না।'; return; }
-  btn.disabled = true;
-  btn.textContent = 'চেক করা হচ্ছে...';
-  try{
-    const h = await sha256Hex(val);
-    if(h === storedHash){
-      // সফল হলে রিডাইরেক্ট করবে index2.html এ
-      msg.textContent = 'লগইন সফল — রিডাইরেক্ট করা হচ্ছে...';
-      pwInput.value = '';
-      setTimeout(()=>{ window.location.href = 'index2.html'; }, 700);
-    } else {
-      msg.textContent = 'ভুল পাসওয়ার্ড। আবার চেষ্টা করুন।';
-    }
-  } catch(e){
-    console.error(e);
-    msg.textContent = 'ত্রুটি ঘটেছে। কনসোল দেখুন।';
-  }
-  btn.disabled = false;
-  btn.textContent = 'প্রবেশ';
-});
-
-// Enter প্রেস করলে বোতাম ক্লিক হবে
-pwInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') btn.click(); });
-</script>
+            // Send to PHP script
+            fetch('send-email.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(formData)
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'success') {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('emailForm').reset();
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').style.display = 'block';
+            });
+        });
+    </script>
 </body>
 </html>
